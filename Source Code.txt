@@ -1,0 +1,51 @@
+% MATLAB Code: Path Loss Comparison for Urban Environments
+% 5G mmWave (28 GHz) vs 6G Upper Mid-Band (7.5 GHz)
+
+clear; clc;
+
+% --- Simulation Parameters ---
+f_5G = 28e9;         % 5G Millimeter-wave frequency (28 GHz) [cite: 7, 14]
+f_6G = 7.5e9;        % 6G Upper Mid-Band candidate (7.5 GHz) [cite: 9, 18]
+c = 3e8;             % Speed of light (m/s)
+dist = 1:2:500;      % Distance from 1 to 500 meters [cite: 8, 16]
+
+% --- Path Loss Model (Close-In Reference Model) ---
+% Based on research simulations in Seoul and Jakarta [cite: 10, 15]
+% Standard Urban Path Loss Exponent (n)
+n_urban = 2.1; 
+
+% 1. Calculate Free Space Path Loss (FSPL) at 1 meter reference
+% Equation: L0 = 20*log10(4*pi*f/c)
+L0_5G = 20 * log10(4 * pi * f_5G / c);
+L0_6G = 20 * log10(4 * pi * f_6G / c);
+
+% 2. Calculate Total Path Loss (PL = L0 + 10*n*log10(d))
+% This represents frequency-dependent propagation loss 
+PL_5G = L0_5G + 10 * n_urban * log10(dist);
+PL_6G = L0_6G + 10 * n_urban * log10(dist);
+
+% 3. Apply 6G Optimization Gain
+% Research indicates 6G can match 5G coverage with 8.2 dB additional gain [cite: 11, 19]
+PL_6G_Optimized = PL_6G - 8.2;
+
+% --- Visualization ---
+figure('Color', 'w');
+plot(dist, PL_5G, 'r', 'LineWidth', 2); hold on;
+plot(dist, PL_6G, 'b', 'LineWidth', 2);
+plot(dist, PL_6G_Optimized, 'b--', 'LineWidth', 1.5);
+
+% Formatting the chart
+grid on;
+xlabel('Distance (meters)');
+ylabel('Path Loss (dB)');
+title('Urban Path Loss: 5G mmWave vs. 6G Upper Mid-Band');
+legend('5G (28 GHz) mmWave', '6G (7.5 GHz) Raw', '6G (7.5 GHz) with 8.2dB Gain');
+
+% Annotate the 5G effective limit (approx. 100m) [cite: 16]
+xline(100, ':k', '5G Effective Range Limit', 'LabelVerticalAlignment', 'bottom');
+
+% Display the Loss Gap
+fprintf('At 100 meters:\n');
+fprintf('Path Loss for 5G (28 GHz): %.2f dB\n', PL_5G(dist==101));
+fprintf('Path Loss for 6G (7.5 GHz): %.2f dB\n', PL_6G(dist==101));
+fprintf('Difference (Gain needed for parity): %.2f dB\n', PL_5G(dist==101) - PL_6G(dist==101));

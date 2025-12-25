@@ -4,10 +4,10 @@
 clear; clc;
 
 % --- Simulation Parameters ---
-f_5G = 28e9;         % 5G Millimeter-wave frequency (28 GHz) [cite: 7, 14]
-f_6G = 7.5e9;        % 6G Upper Mid-Band candidate (7.5 GHz) [cite: 9, 18]
+f_5G = 28e9;         % 5G Millimeter-wave frequency (28 GHz) 
+f_6G = 7.5e9;        % 6G Upper Mid-Band candidate (7.5 GHz) 
 c = 3e8;             % Speed of light (m/s)
-dist = 1:2:500;      % Distance from 1 to 500 meters [cite: 8, 16]
+dist = 1:2:500;      % Distance from 1 to 500 meters 
 
 % --- Path Loss Model (Close-In Reference Model) ---
 % Based on research simulations in Seoul and Jakarta [cite: 10, 15]
@@ -48,4 +48,5 @@ xline(100, ':k', '5G Effective Range Limit', 'LabelVerticalAlignment', 'bottom')
 fprintf('At 100 meters:\n');
 fprintf('Path Loss for 5G (28 GHz): %.2f dB\n', PL_5G(dist==101));
 fprintf('Path Loss for 6G (7.5 GHz): %.2f dB\n', PL_6G(dist==101));
+
 fprintf('Difference (Gain needed for parity): %.2f dB\n', PL_5G(dist==101) - PL_6G(dist==101));
